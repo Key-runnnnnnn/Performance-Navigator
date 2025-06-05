@@ -21,6 +21,19 @@ A Node.js application for managing and analyzing chapter-wise performance data f
 - MongoDB instance
 - Redis server (local or Docker)
 
+### Redis in Local Development
+- The app uses Redis for caching and rate limiting.
+- **If Redis is not running locally, the app will now log a warning and continue to run.**
+- In this case, caching and rate limiting will be disabled, but you can still use all other features.
+- In production, the app will require Redis to be available and will exit if it cannot connect.
+
+### Redis in Deployment (Production)
+- **You do NOT need to run a Redis Docker image or manage Redis yourself in deployment if you use a managed/cloud Redis service (e.g., Redis Cloud, Upstash, Render Redis Blueprint, etc.).**
+- Provision a managed Redis instance and get the connection details (host, port, username, password).
+- Set these details as environment variables (`REDIS_HOST`, `REDIS_PORT`, `REDIS_USERNAME`, `REDIS_PASSWORD`) in your deployment platform's dashboard.
+- Your deployed app will automatically connect to the cloud Redis instance.
+- This is the recommended and secure approach for production deployments.
+
 ### Installation
 1. Clone the repository:
    ```sh
@@ -34,6 +47,10 @@ A Node.js application for managing and analyzing chapter-wise performance data f
 3. Copy `.env.example` to `.env` and update values as needed.
 
 4. Start MongoDB and Redis (see below for Docker instructions).
+   - To run Redis locally with Docker:
+     ```sh
+     docker run --name redis-dashboard -p 6379:6379 -d redis
+     ```
 
 5. Run the app:
    ```sh
