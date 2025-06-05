@@ -24,8 +24,8 @@ A Node.js application for managing and analyzing chapter-wise performance data f
 ### Installation
 1. Clone the repository:
    ```sh
-   git clone <your-repo-url>
-   cd Chapter-Performance-Dashboard
+   git clone https://github.com/Key-runnnnnnn/Performance-Navigator.git
+   cd Chapter Performance Dashboard
    ```
 2. Install dependencies:
    ```sh
@@ -51,18 +51,13 @@ A Node.js application for managing and analyzing chapter-wise performance data f
 ### Build and Run the App
 ```sh
 docker build -t chapter-dashboard .
-docker run -p 3000:3000 --env-file .env chapter-dashboard
+docker run --env-file .env -p 8000:8000 -v "${PWD}/uploads:/app/uploads" chapter-dashboard
 ```
 
 ### Run Redis with Docker
 If you don’t have Redis locally, you can run it easily with Docker:
 ```sh
 docker run --name redis-dashboard -p 6379:6379 -d redis
-```
-
-### Run MongoDB with Docker (Optional)
-```sh
-docker run --name mongo-dashboard -p 27017:27017 -d mongo
 ```
 
 ---
@@ -74,7 +69,7 @@ See `.env.example` for all required variables. Typical values:
 # .env.example
 PORT=3000
 MONGODB_URI=mongodb://localhost:27017/chapter_dashboard
-REDIS_URL=redis://localhost:6379
+ADMIN_TOKEN=YOUR_ADMIN_TOKEN
 ```
 
 ---
@@ -87,10 +82,10 @@ REDIS_URL=redis://localhost:6379
 ---
 
 ## 5. Rate Limiting (How to Check)
-- The app limits each IP to **5 requests per 15 minutes** (configurable in `middleware/rateLimiter.js`).
+- The app limits each IP to **10 requests per 15 minutes** (configurable in `middleware/rateLimiter.js`).
 - To test:
   - Use a tool like curl, Postman, or a browser to make rapid requests to any endpoint (e.g., `/api/v1/chapters`).
-  - After 5 requests, you’ll receive HTTP 429 with a message: `Too many requests from this IP, please try again after 15 minutes.`
+  - After 10 requests, you’ll receive HTTP 429 with a message: `Too many requests from this IP, please try again after 15 minutes.`
 - You can check Redis for keys like `ratelimit:*`.
 
 ---
@@ -99,12 +94,12 @@ REDIS_URL=redis://localhost:6379
 
 ### Get all chapters
 ```
-GET http://localhost:3000/api/v1/chapters
+GET http://localhost:8000/api/v1/chapters
 ```
 
 ### Upload chapters (admin only)
 ```
-POST http://localhost:3000/api/v1/chapters
+POST http://localhost:8000/api/v1/chapters
 Content-Type: multipart/form-data
 Body: file (JSON)
 ```
@@ -122,11 +117,8 @@ Body: file (JSON)
 
 - **Start app:** `npm run dev` or `npm start`
 - **Start Redis (Docker):** `docker run --name redis-dashboard -p 6379:6379 -d redis`
-- **Start MongoDB (Docker):** `docker run --name mongo-dashboard -p 27017:27017 -d mongo`
 - **Build Docker image:** `docker build -t chapter-dashboard .`
-- **Run Docker container:** `docker run -p 3000:3000 --env-file .env chapter-dashboard`
+- **Run Docker container:** `docker run -p 8000:8000 --env-file .env chapter-dashboard`
 
 ---
 
-## 9. Contact
-For questions, contact the maintainer.
